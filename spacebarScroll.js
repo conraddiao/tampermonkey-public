@@ -1,24 +1,36 @@
 // ==UserScript==
 // @name         Half Page Scroll with Spacebar
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Scroll half a page with the spacebar in Chrome
+// @version      0.2
+// @description  Scroll half a page with the spacebar (Shift+Space to scroll up)
 // @match        *://*/*
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    window.addEventListener('keydown', function(event) {
-        // Check if the spacebar is pressed
-        if (event.keyCode === 32) {
-            // Prevent default spacebar scrolling
+    window.addEventListener('keydown', function (event) {
+        // Ignore if typing in an input, textarea, or editable content
+        const activeEl = document.activeElement;
+        const isTyping = activeEl.tagName === 'INPUT' ||
+                         activeEl.tagName === 'TEXTAREA' ||
+                         activeEl.isContentEditable;
+
+        if (isTyping) return;
+
+        // Spacebar key
+        if (event.key === ' ' || event.code === 'Space') {
             event.preventDefault();
 
-            // Scroll down by half the window height
-            window.scrollBy(0, window.innerHeight / 2);
+            const scrollAmount = window.innerHeight / 2;
+            if (event.shiftKey) {
+                // Scroll up
+                window.scrollBy(0, -scrollAmount);
+            } else {
+                // Scroll down
+                window.scrollBy(0, scrollAmount);
+            }
         }
     });
-
 })();
