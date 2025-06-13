@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Half Page Scroll with Spacebar
+// @name         Half Page Smooth Scroll with Spacebar
 // @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  Scroll half a page with the spacebar (Shift+Space to scroll up)
+// @version      0.3
+// @description  Smoothly scroll half a page with the spacebar (Shift+Space to scroll up)
 // @match        *://*/*
 // @grant        none
 // ==/UserScript==
@@ -24,13 +24,13 @@
             event.preventDefault();
 
             const scrollAmount = window.innerHeight / 2;
-            if (event.shiftKey) {
-                // Scroll up
-                window.scrollBy(0, -scrollAmount);
-            } else {
-                // Scroll down
-                window.scrollBy(0, scrollAmount);
-            }
+            const direction = event.shiftKey ? -1 : 1;
+
+            window.scrollBy({
+                top: direction * scrollAmount,
+                left: 0,
+                behavior: 'smooth'
+            });
         }
     });
 })();
